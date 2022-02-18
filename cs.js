@@ -22,6 +22,8 @@ const blacklist = [
     "minecraft:red_shulker_box",
     "minecraft:black_shulker_box",
     "minecraft:chest",
+    "minecraft:trapped_chest",
+    "minecraft:barrel",
     "minecraft:axolotl_spawn_egg",
     "minecraft:bat_spawn_egg",
     "minecraft:bee_spawn_egg",
