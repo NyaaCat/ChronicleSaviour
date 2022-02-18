@@ -1,0 +1,15 @@
+{
+  "name": "chroniclesaviour",
+  "version": "1.0.0",
+  "description": "Flatten player data for a new age.",
+  "main": "cs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-gzip": "^1.1.2",
+    "prismarine-nbt": "^2.2.0"
+  }
+}
