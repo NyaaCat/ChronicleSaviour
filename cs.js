@@ -94,7 +94,15 @@ const blacklist = [
 
 const whitelist = [
     "minecraft:written_book"
-]
+];
+
+const tagToRemove = [
+    "Enchantments",
+    "AttributeModifiers",
+    "HideFlags",
+    "Unbreakable",
+    "StoredEnchantments"
+];
 
 const fs = require('fs/promises');
 const path = require('path');
@@ -161,38 +169,21 @@ async function shrink(items) {
             // remove stack
             item.Count.value = 1;
             if (nestedValue(item, 'tag', 'value', 'display', 'value', 'Lore')) {
-                if (item.tag.value.Enchantments) {
-                    delete item.tag.value.Enchantments;
-                }
-                if (item.tag.value.AttributeModifiers) {
-                    delete item.tag.value.AttributeModifiers
-                }
-                if (item.tag.value.HideFlags) {
-                    delete item.tag.value.HideFlags
-                }
-                if (item.tag.value.RepairCost) {
-                    delete item.tag.value.RepairCost;
-                }
-                if (item.tag.value.Damage) {
-                    delete item.tag.value.Damage;
-                }
-                if (item.tag.value.Unbreakable) {
-                    delete item.tag.value.Unbreakable;
-                }
-                if (item.tag.value.HideFlags) {
-                    delete item.tag.value.HideFlags;
-                }
-                if (item.tag.value.StoredEnchantments) {
-                    delete item.tag.value.StoredEnchantments;
-                }
-                filtered.push(item);
-            } else if (nestedValue(item, 'tag', 'value', 'author', 'value')) {
-                // signed book
+                tagToRemove.forEach(function(tag) {
+                    item = removeTag(item, tag);
+                });
                 filtered.push(item);
             }
         }
     }));
     return filtered;
+}
+
+function removeTag(item, tag) {
+    if (nestedValue(item, 'tag', 'value', tag, 'type')) {
+        delete item.tag.value[tag];
+    }
+    return item;
 }
 
 // test & get value from nested object
