@@ -104,6 +104,12 @@ const tagToRemove = [
     "StoredEnchantments"
 ];
 
+const attributesToRemove = [
+    "XpTotal",
+    "XpLevel",
+    "XpP"
+];
+
 const fs = require('fs/promises');
 const path = require('path');
 const gzip = require('node-gzip');
@@ -138,16 +144,12 @@ let counter = 0;
 })();
 
 async function flatten(data) {
-    // xp
-    if (data.value.XpTotal) data.value.XpTotal.value = 0;
-    if (data.value.XpLevel) data.value.XpLevel.value = 0;
-    if (data.value.XpP) data.value.XpP.value = 0.0;
-    // spawn
-    if (data.value.SpawnX) delete data.value.SpawnX;
-    if (data.value.SpawnY) delete data.value.SpawnY;
-    if (data.value.SpawnZ) delete data.value.SpawnZ;
-    if (data.value.SpawnDimension) delete data.value.SpawnDimension;
-    if (data.value.Pos) delete data.value.Pos;
+    // attributes
+    attributesToRemove.forEach(function(attr) {
+        if (nestedValue(data, 'value', attr)) {
+            delete data.value[attr];
+        }
+    });
     // inventory
     if (data.value.Inventory) {
         let inv = await shrink(data.value.Inventory.value.value);
