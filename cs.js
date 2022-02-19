@@ -92,6 +92,10 @@ const blacklist = [
     "minecraft:spawner"
 ];
 
+const whitelist = [
+    "minecraft:written_book"
+]
+
 const fs = require('fs/promises');
 const path = require('path');
 const gzip = require('node-gzip');
@@ -102,7 +106,7 @@ let counter = 0;
 
 (async () => {
     const files = await fs.readdir(playerdatadir);
-    
+
     await Promise.all(
         files.map(async (file) => {
             if (file.split('.')[1] === 'dat' && file.length === 40) {
@@ -153,7 +157,7 @@ async function shrink(items) {
     let filtered = []
     Promise.all(items.map(async (item) => {
         // filter blacklist
-        if (blacklist.indexOf(item.id.value) === -1) {
+        if (blacklist.indexOf(item.id.value) === -1 || whitelist.indexOf(item.id.value) !== -1) {
             // remove stack
             item.Count.value = 1;
             if (nestedValue(item, 'tag', 'value', 'display', 'value', 'Lore')) {
@@ -181,6 +185,9 @@ async function shrink(items) {
                 if (item.tag.value.StoredEnchantments) {
                     delete item.tag.value.StoredEnchantments;
                 }
+                filtered.push(item);
+            } else if (nestedValue(item, 'tag', 'value', 'author', 'value')) {
+                // signed book
                 filtered.push(item);
             }
         }
