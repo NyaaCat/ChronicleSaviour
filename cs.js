@@ -166,17 +166,28 @@ async function flatten(data) {
 async function shrink(items) {
     let filtered = []
     Promise.all(items.map(async (item) => {
-        // filter blacklist
-        if (blacklist.indexOf(item.id.value) === -1 || whitelist.indexOf(item.id.value) !== -1) {
-            // remove stack
+
+        if (whitelist.indexOf(item.id.value) !== -1) {
+            // handle whitelist
             item.Count.value = 1;
-            if (nestedValue(item, 'tag', 'value', 'display', 'value', 'Lore')) {
-                tagToRemove.forEach(function(tag) {
-                    item = removeTag(item, tag);
-                });
-                filtered.push(item);
+            tagToRemove.forEach(function(tag) {
+                item = removeTag(item, tag);
+            });
+            filtered.push(item);
+        } else {
+            // filter blacklist
+            if (blacklist.indexOf(item.id.value) === -1) {
+                // remove stack
+                item.Count.value = 1;
+                if (nestedValue(item, 'tag', 'value', 'display', 'value', 'Lore')) {
+                    tagToRemove.forEach(function(tag) {
+                        item = removeTag(item, tag);
+                    });
+                    filtered.push(item);
+                }
             }
         }
+        
     }));
     return filtered;
 }
@@ -190,5 +201,5 @@ function removeTag(item, tag) {
 
 // test & get value from nested object
 function nestedValue(obj, ...args) {
-  return args.reduce((obj, level) => obj && obj[level], obj)
+    return args.reduce((obj, level) => obj && obj[level], obj);
 }
