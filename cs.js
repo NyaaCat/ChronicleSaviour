@@ -165,7 +165,7 @@ async function flatten(data) {
 
 async function shrink(items) {
     let filtered = []
-    Promise.all(items.map(async (item) => {
+    await Promise.all(items.map(async (item) => {
 
         if (whitelist.indexOf(item.id.value) !== -1) {
             // handle whitelist
